@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GigaMTI — Настройка продукта</title>
+  <style>
+    body{font-family:Inter,system-ui; padding:16px; background:#0b0b0f; color:#fff}
+    .card{background:#0f1720;padding:16px;border-radius:12px; max-width:720px;margin:12px auto}
+    input,button,select,textarea{width:100%;padding:8px;margin-top:8px;border-radius:8px;border:1px solid #222;background:#0b1114;color:#fff}
+    button{cursor:pointer}
+  </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h2 id="title">Настройка продукта</h2>
+    <label>Шаблон:
+      <select id="template">
+        <option value="crypto">CryptoART (VIP)</option>
+        <option value="beauty">Beauty (Salon)</option>
+      </select>
+    </label>
+
+    <label>Название проекта
+      <input id="name" placeholder="Название сообщества / салона" />
+    </label>
+
+    <label>Краткое описание
+      <textarea id="desc" rows="3" placeholder="Коротко: что делает ваш проект"></textarea>
+    </label>
+
+    <label>Цвет акцента (hex)
+      <input id="color" placeholder="#00bcd4" />
+    </label>
+
+    <label>Логотип — URL (или загрузите позже)
+      <input id="logo" placeholder="https://..." />
+    </label>
+
+    <button id="sendBtn">Сохранить и отправить</button>
+    <p style="opacity:.7;font-size:13px;margin-top:8px">Данные отправятся напрямую в бот — мы свяжемся для оплаты/пилота.</p>
+  </div>
+
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.expand?.();
+
+  document.getElementById('sendBtn').addEventListener('click', ()=>{
+    const payload = {
+      template: document.getElementById('template').value,
+      name: document.getElementById('name').value.trim(),
+      desc: document.getElementById('desc').value.trim(),
+      color: document.getElementById('color').value.trim(),
+      logo: document.getElementById('logo').value.trim(),
+      ts: Date.now()
+    };
+    // отправляем данные боту через WebApp API
+    tg.sendData(JSON.stringify(payload));
+    // даём обратную связь в WebApp UI
+    tg.popup?.({title: "Готово", message: "Конфигурация отправлена в бот. Ожидайте инструкций."});
+  });
+</script>
+</body>
+</html>
